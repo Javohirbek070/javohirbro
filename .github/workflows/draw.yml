@@ -1,40 +1,28 @@
-name: Draw on Contributions
+name: Daily Green Commit
 
 on:
+  schedule:
+    - cron: "0 3 * * *"   # Har kuni UTC 03:00
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  draw:
+  commit:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set git identity
         run: |
           git config user.name "Javohirbek070"
           git config user.email "javohirbek537@gmail.com"
 
-      - name: Make dated empty commits
+      - name: Make commit
         run: |
-          set -e
-
-          # Bu yerga kerakli sanalarni yozasan (YYYY-MM-DD)
-          DATES=(
-            "2026-02-01"
-            "2026-02-02"
-            "2026-02-03"
-          )
-
-          for d in "${DATES[@]}"; do
-            export GIT_AUTHOR_DATE="${d}T12:00:00"
-            export GIT_COMMITTER_DATE="${d}T12:00:00"
-            git commit --allow-empty -m "pixel ${d}"
-          done
-
-      - name: Push
-        run: |
+          echo "update $(date)" >> log.txt
+          git add log.txt
+          git commit -m "daily update"
           git push
